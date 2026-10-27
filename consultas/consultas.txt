@@ -1,0 +1,159 @@
+fragment DatosBasicos on Departamento {
+    nombre
+    poblacion
+}
+
+fragment DatosCompletos on Departamento {
+    ...DatosBasicos
+    superficie
+    densidad
+    municipios
+    capital {
+        nombre
+    }
+    region {
+        nombre
+    }
+}
+
+fragment DatosAtraccion on Atraccion {
+    nombre
+    latitud
+    longitud
+    ciudad {
+        nombre
+    }
+    departamento {
+        nombre
+    }
+}
+
+query PoblacionMayor($poblacionMayor: Int!) {
+    departamentosPoblacionMayor(poblacion: $poblacionMayor) {
+        ...DatosCompletos
+    }
+}
+
+query PoblacionMenor($poblacionMenor: Int!) {
+    departamentosPoblacionMenor(poblacion: $poblacionMenor) {
+        ...DatosBasicos
+    }
+}
+
+query PoblacionEntre($minimo: Int!, $maximo: Int!) {
+    departamentosPoblacionEntre(minimo: $minimo, maximo: $maximo) {
+        ...DatosBasicos
+    }
+}
+
+query AtraccionesCiudad($ciudad: String!) {
+    atraccionesPorCiudad(ciudad: $ciudad) {
+        ...DatosAtraccion
+    }
+}
+
+query AtraccionesDepartamento($departamento: String!) {
+    atraccionesPorDepartamento(departamento: $departamento) {
+        ...DatosAtraccion
+    }
+}
+
+query Cercanas($latitud: Float!, $longitud: Float!, $radioKm: Float) {
+    atraccionesCercanas(latitud: $latitud, longitud: $longitud, radioKm: $radioKm) {
+        ...DatosAtraccion
+    }
+}
+
+query BuscarTexto($texto: String!) {
+    buscarAtracciones(texto: $texto) {
+        nombre
+        ciudad {
+            nombre
+        }
+    }
+}
+
+query Region($region: String!) {
+    departamentosPorRegion(region: $region) {
+        ...DatosBasicos
+        atracciones {
+            nombre
+        }
+    }
+}
+
+query Rankings($cantidad: Int) {
+    masPoblados: departamentosMasPoblados(cantidad: $cantidad) {
+        ...DatosBasicos
+    }
+    masExtensos: departamentosMasExtensos(cantidad: $cantidad) {
+        nombre
+        superficie
+    }
+    masDensos: departamentosPorDensidad(cantidad: $cantidad) {
+        nombre
+        densidad
+    }
+    menosDensos: departamentosPorDensidad(cantidad: $cantidad, mayorPrimero: false) {
+        nombre
+        densidad
+    }
+}
+
+query DepartamentoDetalle($nombre: String!) {
+    departamentoPorNombre(nombre: $nombre) {
+        ...DatosCompletos
+        atracciones {
+            nombre
+            ciudad {
+                nombre
+            }
+        }
+    }
+}
+
+query SinAtracciones {
+    departamentosSinAtracciones {
+        nombre
+    }
+    ciudadesConAtracciones
+}
+
+query Estadisticas {
+    estadisticas {
+        totalDepartamentos
+        totalAtracciones
+        poblacionTotal
+        promedioPoblacion
+        masPoblado {
+            ...DatosBasicos
+        }
+        menosPoblado {
+            ...DatosBasicos
+        }
+        conMasAtracciones {
+            nombre
+            atracciones {
+                nombre
+            }
+        }
+    }
+}
+
+--- Variables para colocar en apollo ----
+
+{
+    "poblacionMayor":4000000,
+    "poblacionMenor":100000,
+    "minimo":1000000,
+    "maximo":1500000,
+    "ciudad": "Santa Marta",
+    "departamento":"Boyaca",
+    "latitud": 5.53,
+    "longitud": -73.36,
+    "radioKm": 60,
+    "texto": "parque",
+    "region": "Caribe",
+    "cantidad": 3,
+    "nombre":"Antioquia"
+  }

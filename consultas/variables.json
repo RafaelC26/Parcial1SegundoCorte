@@ -1,0 +1,15 @@
+{
+  "poblacionMayor": 4000000,
+  "poblacionMenor": 100000,
+  "minimo": 1000000,
+  "maximo": 1500000,
+  "ciudad": "Santa Marta",
+  "departamento": "Boyaca",
+  "latitud": 5.53,
+  "longitud": -73.36,
+  "radioKm": 60,
+  "texto": "parque",
+  "region": "Caribe",
+  "cantidad": 3,
+  "nombre": "Antioquia"
+}
